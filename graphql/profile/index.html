@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GQL Profile · 01 Founders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     LOADING OVERLAY
+══════════════════════════════════════════ -->
+<div class="loading-overlay" id="loading">
+  <div class="loading-ring"></div>
+  <div class="loading-text">Querying GraphQL…</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     LOGIN PAGE
+══════════════════════════════════════════ -->
+<div id="login-page">
+  <div class="login-grid-bg"></div>
+
+  <div class="login-card">
+    <div class="login-logo">GQL<span>.</span>PROFILE</div>
+    <div class="login-subtitle">01 Founders — Learn platform</div>
+
+    <div class="login-field">
+      <label for="id-input">Username or Email</label>
+      <input
+        type="text"
+        id="id-input"
+        placeholder="your_login or email@example.com"
+        autocomplete="username"
+      />
+    </div>
+
+    <div class="login-field">
+      <label for="pw-input">Password</label>
+      <input
+        type="password"
+        id="pw-input"
+        placeholder="••••••••"
+        autocomplete="current-password"
+      />
+    </div>
+
+    <button class="btn-primary" id="login-btn" onclick="handleLogin()">
+      Sign In
+    </button>
+
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PROFILE PAGE
+══════════════════════════════════════════ -->
+<div id="profile-page" class="hidden">
+
+  <!-- ── Navigation ─────────────────────── -->
+  <nav class="nav">
+    <div class="nav-logo">GQL<span>.</span>PROFILE</div>
+    <div class="nav-right">
+      <div class="nav-user">
+        Logged in as <strong id="nav-login">—</strong>
+      </div>
+      <button class="btn-logout" onclick="handleLogout()">⏻ Logout</button>
+    </div>
+  </nav>
+
+  <div class="main">
+
+    <!-- ══════════════════════════════════════
+         SECTION 1 · User Identity
+    ══════════════════════════════════════ -->
+    <section class="hero" aria-label="User Identity">
+      <div class="hero-login">
+        <span class="at">@</span><span id="hero-login-text">loading…</span>
+      </div>
+      <div class="hero-id">
+        User ID: <strong id="hero-id-text">—</strong>
+      </div>
+      <div class="hero-badges" id="hero-badges">
+        <span class="badge badge-cyan">01 Founders</span>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════
+         SECTIONS GRID
+    ══════════════════════════════════════ -->
+    <div class="sections-grid">
+
+      <!-- SECTION 2 · XP & Progress -->
+      <div class="card" aria-label="XP and Progress">
+        <div class="card-header">
+          <div class="card-icon icon-cyan">⚡</div>
+          <div class="card-title">XP &amp; Progress</div>
+        </div>
+        <div class="big-number" id="total-xp">—</div>
+        <div class="big-label">Total XP Earned</div>
+        <div id="xp-stats-rows" style="margin-top:20px"></div>
+      </div>
+
+      <!-- SECTION 3 · Audit Ratio -->
+      <div class="card" aria-label="Audit Ratio">
+        <div class="card-header">
+          <div class="card-icon icon-pink">⚖</div>
+          <div class="card-title">Audit Ratio</div>
+        </div>
+        <div
+          class="big-number"
+          id="audit-ratio-num"
+          style="color:var(--accent2)"
+        >—</div>
+        <div class="big-label">Done ÷ Received</div>
+        <div class="ratio-bar-wrap">
+          <div class="ratio-bar-labels">
+            <span id="lbl-done">Done: —</span>
+            <span id="lbl-recv">Received: —</span>
+          </div>
+          <div class="ratio-bar">
+            <div class="ratio-fill" id="ratio-fill" style="width:0%"></div>
+          </div>
+        </div>
+        <div id="audit-stats-rows" style="margin-top:16px"></div>
+      </div>
+
+      <!-- SECTION 4 · Top Skills -->
+      <div class="card" aria-label="Top Skills">
+        <div class="card-header">
+          <div class="card-icon icon-purple">★</div>
+          <div class="card-title">Top Skills</div>
+        </div>
+        <div id="skills-list"></div>
+      </div>
+
+    </div><!-- /sections-grid -->
+
+    <!-- ══════════════════════════════════════
+         Recent XP Transactions (bonus section)
+    ══════════════════════════════════════ -->
+    <div class="card" aria-label="Recent XP Transactions">
+      <div class="card-header">
+        <div class="card-icon icon-green">↑</div>
+        <div class="card-title">Recent XP Transactions</div>
+      </div>
+      <div class="tx-list" id="tx-list"></div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         STATISTICS SECTION
+         Three SVG graphs — always visible,
+         stacked vertically, no tab buttons.
+         ① XP Over Time  (line + area)
+         ② Top Projects  (3-D column)
+         ③ Pass / Fail   (hollow donut)
+    ══════════════════════════════════════ -->
+    <section class="graphs-section" aria-label="Statistical Analysis">
+
+      <div class="graphs-section-header">
+        <span style="font-size:22px">⚡</span>
+        <div class="graphs-section-title">Statistical Analysis</div>
+      </div>
+      <div class="graphs-section-sub">
+        Cumulative XP &nbsp;·&nbsp; Project Breakdown &nbsp;·&nbsp; Pass/Fail Ratio
+      </div>
+
+      <!-- ① XP Over Time -->
+      <div class="graph-block">
+        <div class="graph-block-title">① XP Over Time (Cumulative)</div>
+        <div class="svg-wrap" id="graph-xp-time"></div>
+      </div>
+
+      <!-- ② Top Projects by XP -->
+      <div class="graph-block">
+        <div class="graph-block-title">② Top Projects by XP</div>
+        <div class="svg-wrap" id="graph-projects"></div>
+      </div>
+
+      <!-- ③ Pass / Fail Ratio -->
+      <div class="graph-block">
+        <div class="graph-block-title">③ Pass / Fail Ratio</div>
+        <div class="svg-wrap" id="graph-passfail"></div>
+      </div>
+
+    </section><!-- /graphs-section -->
+
+  </div><!-- /main -->
+</div><!-- /profile-page -->
+
+<!-- ══════════════════════════════════════════
+     SCRIPTS
+     Load order matters:
+     config → api → auth → render → charts → main → test → test-panel
+══════════════════════════════════════════ -->
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/render.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/main.js"></script>
+<script src="js/test.js"></script>
+<script src="js/test-panel.js"></script>
+
+</body>
+</html>
