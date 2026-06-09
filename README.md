@@ -235,5 +235,6 @@ without needing DevTools — fulfils the *"own GraphiQL"* bonus.
 ---
 
 
-
+Hosting the graphql web app here is the link:
+https://app.netlify.com/projects/graphql-mtumurba/overview
 
